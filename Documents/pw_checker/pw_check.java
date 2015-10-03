@@ -154,11 +154,11 @@ public class pw_check{
                         word.append(currChar);
                         for(int check = 0; check < word.length(); check++)
                         {
-                            if(dictionary.search(word.substring(check, (word.length()-1))) == true)
+                            if(dictionary.search(word.substring(check, (word.length()))) == true)
                             {
                                 found = true;
                             }
-                            if(dictionary.search(word.substring(0, check)) == true)
+                            if(dictionary.search(word.substring(0, check + 1)) == true)
                             {
                                 found = true;
                             }
@@ -190,11 +190,11 @@ public class pw_check{
                                 word.append(currChar);
                                 for(int check = 0; check < word.length(); check++)
                                 {
-                                    if(dictionary.search(word.substring(check, (word.length()-1))) == true)
+                                    if(dictionary.search(word.substring(check, (word.length()))) == true)
                                     {
                                         found = true;
                                     }
-                                    if(dictionary.search(word.substring(0, check)) == true)
+                                    if(dictionary.search(word.substring(0, check + 1)) == true)
                                     {
                                         found = true;
                                     }
@@ -231,11 +231,11 @@ public class pw_check{
                                         word.append(currChar);
                                         for(int check = 0; check < word.length(); check++)
                                         {
-                                            if(dictionary.search(word.substring(check, (word.length()-1))) == true)
+                                            if(dictionary.search(word.substring(check, (word.length()))) == true)
                                             {
                                                 found = true;
                                             }
-                                            if(dictionary.search(word.substring(0, check)) == true)
+                                            if(dictionary.search(word.substring(0, check + 1)) == true)
                                             {
                                                 found = true;
                                             }
@@ -272,18 +272,19 @@ public class pw_check{
                                                 word.append(currChar);
                                                 for(int check = 0; check < word.length(); check++)
                                                 {
-                                                    if(dictionary.search(word.substring(check, (word.length()-1))) == true)
+                                                    System.out.println(word.substring(check, (word.length())));
+                                                    if(dictionary.search(word.substring(check, (word.length()))) == true)
                                                     {
                                                         found = true;
                                                     }
-                                                    if(dictionary.search(word.substring(0, check)) == true)
+                                                    if(dictionary.search(word.substring(0, check + 1)) == true)
                                                     {
                                                         found = true;
                                                     }
+                                                    
                                                 }
                                                 if(found == false)
                                                 {
-                                                    System.out.println(word);
                                                     passwords.insert(word.toString());
                                                 }
                                                 word.deleteCharAt(4);
