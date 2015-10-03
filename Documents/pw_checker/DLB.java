@@ -1,5 +1,3 @@
-import java.util.Queue;
-
 /**
  *
  * @author Alex Soffa
@@ -55,11 +53,11 @@ public class DLB {
         char [] string = s.toCharArray();
         iterator = root;
         boolean found = false;
-        for(int i = 0; i < string.length; i++)
+        for(int i = 0; i < string.length - 1; i++)
         {
             if(iterator.value == string[i])
             {
-                if(i == (string.length - 1))
+                if(i == (string.length - 1) && iterator.isWord == true)
                     found = true;
                 else 
                     iterator = iterator.childNode;
@@ -69,8 +67,10 @@ public class DLB {
                 if(iterator.value == ' ')
                     found = false;
                 else
+                {
                     iterator = iterator.siblingNode;
-                i--;
+                    i--;
+                }
             }     
         }
         return found;
@@ -79,19 +79,35 @@ public class DLB {
     {
         Node n = root;
         int i = 0;
-        exhaustiveSearch(n, i);
+        char [] e = new char[5];
+        exhaustiveSearch(n, i, i, e, i);
     }
-    private void exhaustiveSearch(Node curr, int index)
+    private void exhaustiveSearch(Node curr, int childIndex, int sibIndex, char [] w, int firstBranch)
     {
-        m[index] = curr.value;
-        index = index + 1;
+        w[childIndex] = curr.value;
+        if(curr.isWord)
+            for(int i = 0; i < childIndex + 1; i++)
+                System.out.print(w[i]);
+        System.out.println();
         if(curr.hasChild(curr))
         {
-            exhaustiveSearch(curr.childNode, index);
+            exhaustiveSearch(curr.childNode, ++childIndex, sibIndex, w, firstBranch);
+        }
+        if(firstBranch == 0)
+            firstBranch = childIndex;   
+        if(childIndex != firstBranch)
+        {
+            childIndex = childIndex - 1;
         }
         if(curr.hasSibling(curr))
-        {
-            exhaustiveSearch(curr.siblingNode, index);
+        {       
+            exhaustiveSearch(curr.siblingNode, childIndex, ++sibIndex, w, firstBranch);
         }
+        if(childIndex == firstBranch)
+        {
+            childIndex = firstBranch - 1;
+            sibIndex = 0;
+            firstBranch = 0;
+        }        
     }
 }
