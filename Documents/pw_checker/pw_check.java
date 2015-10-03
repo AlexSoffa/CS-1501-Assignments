@@ -9,7 +9,7 @@ import java.util.Scanner;
  *
  * @author Alex Soffa
  */
-public class PwChecker{
+public class pw_check{
 
     /**
      * @param args the command line arguments
