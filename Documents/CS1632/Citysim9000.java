@@ -10,7 +10,21 @@ public class Citysim9000 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        int seed = Integer.parseInt(args[0]);
+		int seed;
+		if(args.length > 1)
+		{
+			System.out.println("Error in seed value input: too many values");
+			return;
+		}
+		try
+		{
+			seed = Integer.parseInt(args[0]);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error in seed value input: not an integer");
+			return;
+		}
         long choice;
         Random generator = new Random(seed);
         choice = generator.nextLong();

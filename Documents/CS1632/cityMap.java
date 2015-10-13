@@ -24,7 +24,6 @@ public class cityMap
     }
     public void ifOutsideStart(Location outsideStart, int choice)
     {
-		System.out.println(choice);
         if(choice < 0)
             outsideStart.addMainLoc(mall, "Fourth Ave");
         else
