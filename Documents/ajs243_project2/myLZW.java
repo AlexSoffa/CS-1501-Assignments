@@ -44,19 +44,22 @@ public class myLZW
 		int w = W;
 		String input = BinaryStdIn.readString();
 		TST<Integer> st = new TST<Integer>();
-		
-		for (int i = 0; i < R; i++)  
+		for (int i = 0; i < R; i++)
 			st.put("" + (char) i, i);
-        
+        double dataSize = input.length();
+		double compSize = 2;
+		double oldRatio = 0;
+		double newRatio = 0;
+		double compRatio = 0;
 		int code = R+1;  // R is codeword for EOF
-		
 		while (input.length() > 0) 
-		{	
+		{
+			
 			String s = st.longestPrefixOf(input);  // Find max prefix match s.
 			BinaryStdOut.write(st.get(s), w);      // Print s's encoding.
 			int t = s.length();
 			if (t < input.length() && code < l)
-			{						     
+			{	
 				st.put(input.substring(0, t + 1), code++);
 			}
 			if (code == l && w < 16)
@@ -64,7 +67,8 @@ public class myLZW
 				w = w + 1;
 				l = (int) Math.pow(2, w);
 				st.put(input.substring(0, t + 1), code++);
-			}
+				oldRatio = dataSize/compSize;
+			}	
 			if (code == l && w == 16 && mode.equals("r"))
 			{
 				st = new TST<Integer>();
@@ -74,6 +78,20 @@ public class myLZW
 				l = L;
 				w = W;
 			}
+			if (code == l && w == 16 && mode.equals("w"))
+			{
+				newRatio = dataSize/compSize;
+				compRatio = oldRatio/newRatio;
+				{
+					st = new TST<Integer>();
+					for (int i = 0; i < R; i++)
+						st.put("" + (char) i, i);
+					code = R+1;
+					l = L;
+					w = W;
+				}
+			}
+			compSize += w/8.0;
 			input = input.substring(t);            // Scan past s in input.
 		}
 		BinaryStdOut.write(R, w);
@@ -89,17 +107,24 @@ public class myLZW
 		int codeword;
 		String[] st = new String[mL];
 		int i; // next available codeword value
+		double dataSize = 0;
+		double decompSize = 0;
+		double oldRatio = 0;
+		double newRatio = 0;
+		double compRatio = 0;
 
 	  	// initialize symbol table with all 1-character strings
 		for (i = 0; i < R; i++)
 			st[i] = "" + (char) i;
 		st[i++] = "";                        // (unused) lookahead for EOF
 		codeword = BinaryStdIn.readInt(w);
+		decompSize += w/8.0;
 		if (codeword == R) return;           // expanded message is empty string
 		val = st[codeword];			 // gets first ascii character
 		while (true) 
 		{
 			BinaryStdOut.write(val);				// Writes first and subsequent chars
+			dataSize += val.length();
 			codeword = BinaryStdIn.readInt(w); // reads next encoded int of bit-width w;
 			if (codeword == R) 
 				break;
@@ -115,6 +140,7 @@ public class myLZW
 				w = w + 1;
 				l = (int) Math.pow(2, w);
 				st[i++] = val + s.charAt(0);
+				oldRatio = dataSize/decompSize;
 			}
 			if (i == l - 1 && w == 16 && mode.equals("r"))
 			{
@@ -130,6 +156,27 @@ public class myLZW
 				val = st[codeword];
 				continue;
 			}
+			if (i == l - 1 && w == 16 && mode.equals("w"))
+			{
+				newRatio = dataSize/decompSize;
+				compRatio = oldRatio/newRatio;
+				if(compRatio < 1.1)
+				{ 
+					st = new String[mL];
+					l = L;
+					w = W;
+					for(i = 0; i < R; i++)
+						st[i] = "" + (char) i;
+					st[i++] = "";
+					codeword = BinaryStdIn.readInt(w);
+					decompSize += w/8.0;
+					if (codeword == R)
+						return;
+					val = st[codeword];
+					continue;
+				}
+			}
+			decompSize += w/8.0;
 			val = s;
 		}
 		BinaryStdOut.close();
